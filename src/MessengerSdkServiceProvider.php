@@ -3,12 +3,17 @@
 namespace WellnessLiving\MessengerSdk;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\ServiceProvider;
 
 class MessengerSdkServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        AboutCommand::add('WellnessLiving Messenger SDK', fn() => ['Version' => '0.0.1']);
+
+
+        $this->registerConfig();
         /*
         * Optional methods to load your package assets
         */
@@ -19,9 +24,7 @@ class MessengerSdkServiceProvider extends ServiceProvider
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('messenger-sdk.php'),
-            ], 'config');
+
 
             // Publishing the views.
             /*$this->publishes([
@@ -45,9 +48,6 @@ class MessengerSdkServiceProvider extends ServiceProvider
 
     public function register()
     {
-        // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'messenger-sdk');
-
         // Register the main class to use with the facade
         $this->app->singleton('messengerSdk', function (Application $application) {
 
@@ -56,6 +56,17 @@ class MessengerSdkServiceProvider extends ServiceProvider
                 config('messenger-sdk.messenger_access_key'),
             );
         });
+    }
+
+
+    private function registerConfig()
+    {
+        $this->publishes([
+            __DIR__ . '/../config/wl-messenger.php' => $this->app->configPath('wl-messenger.php'),
+        ], 'wl-messenger-config');
+
+        // Automatically apply the package configuration
+        $this->mergeConfigFrom(__DIR__ . '/../config/wl-messenger.php', 'wl-messenger');
     }
 
 
