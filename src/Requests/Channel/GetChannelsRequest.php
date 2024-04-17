@@ -1,11 +1,11 @@
 <?php
 
-namespace WellnessLiving\MessengerSdk\Requests\Message;
+namespace WellnessLiving\MessengerSdk\Requests\Channel;
 
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetMessagesRequest extends Request
+class GetChannelsRequest extends Request
 {
     protected Method $method = Method::GET;
 
@@ -14,6 +14,6 @@ class GetMessagesRequest extends Request
      */
     public function resolveEndpoint(): string
     {
-        return '/messages';
+        return '/channels';
     }
 }

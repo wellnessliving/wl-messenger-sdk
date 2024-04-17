@@ -6,6 +6,11 @@ use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Http\OAuth2\GetAccessTokenRequest;
 use Saloon\Http\PendingRequest;
+use WellnessLiving\MessengerSdk\Requests\Authentication\GetTokenRequest;
+use WellnessLiving\MessengerSdk\Requests\Channel\CreateChannelRequest;
+use WellnessLiving\MessengerSdk\Requests\Channel\GetChannelRequest;
+use WellnessLiving\MessengerSdk\Requests\Channel\GetChannelsRequest;
+use WellnessLiving\MessengerSdk\Requests\Message\GetMessagesRequest;
 
 class MessengerConnector extends Connector
 {
@@ -53,11 +58,60 @@ class MessengerConnector extends Connector
     {
         return $this->baseUrl;
     }
+
+    public function setBusinessId(int|string|null $businessId): MessengerConnector
+    {
+        $this->businessId = $businessId;
+        return $this;
+    }
+
+    public function setUserId(int|string|null $userId): MessengerConnector
+    {
+        $this->userId = $userId;
+        return $this;
+    }
+
+    public function getBusinessId(): int|string|null
+    {
+        return $this->businessId;
+    }
+
+    public function getUserId(): int|string|null
+    {
+        return $this->userId;
+    }
+
     protected function defaultHeaders(): array
     {
         return [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
+    }
+
+    public function allChannel()
+    {
+        return $this->send(new GetChannelsRequest());
+    }
+
+    public function getChannel(string $channelId)
+    {
+        return $this->send(new GetChannelRequest($channelId));
+    }
+
+    public function createChannel(
+        string $topicId,
+        string $topic,
+        string $description = null,
+        bool   $isPrivate = false,
+        array  $metaData = []
+    )
+    {
+        return $this->send(new CreateChannelRequest($topicId, $topic, $description, $isPrivate, $metaData));
+    }
+
+    public function getMessages()
+    {
+        return $this->send(new GetMessagesRequest());
     }
 }
