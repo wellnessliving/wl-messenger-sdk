@@ -11,11 +11,8 @@ use Saloon\Enums\Method;
 use Saloon\Http\PendingRequest;
 use Saloon\Http\Request;
 
-class GetTokenRequest extends Request implements Cacheable
+class GetTokenRequest extends Request
 {
-
-    use HasCaching;
-
     protected Method $method = Method::GET;
 
     protected string|int $businessId;
@@ -55,20 +52,4 @@ class GetTokenRequest extends Request implements Cacheable
         ];
     }
 
-
-    public function resolveCacheDriver(): Driver
-    {
-        return new LaravelCacheDriver(Cache::getStore());
-    }
-
-    public function cacheExpiryInSeconds(): int
-    {
-        return 60 * 30; // 30 Min
-    }
-
-    protected function cacheKey(PendingRequest $pendingRequest): ?string
-    {
-        dd($pendingRequest);
-        return 'custom-cache-key';
-    }
 }

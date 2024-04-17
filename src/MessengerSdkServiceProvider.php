@@ -52,8 +52,8 @@ class MessengerSdkServiceProvider extends ServiceProvider
         $this->app->singleton('messengerSdk', function (Application $application) {
 
             return new MessengerConnector(
-                config('messenger-sdk.messenger_api_url'),
-                config('messenger-sdk.messenger_access_key'),
+                config('wl-messenger.messenger_api_url'),
+                config('wl-messenger.messenger_access_key'),
             );
         });
     }
@@ -63,7 +63,7 @@ class MessengerSdkServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/wl-messenger.php' => $this->app->configPath('wl-messenger.php'),
-        ], 'wl-messenger-config');
+        ], 'wl-messenger');
 
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/wl-messenger.php', 'wl-messenger');
