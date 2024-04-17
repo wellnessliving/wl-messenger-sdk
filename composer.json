@@ -1,0 +1,47 @@
+{
+  "name": "wellnessliving/messenger-sdk",
+  "description": "WellnessLiving Messenger SDK",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Berdj Wellnessliving",
+      "email": "berdj.a@wellnessliving.com",
+      "role": "Technical Lead"
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "saloonphp/saloon": "^3.0",
+    "illuminate/support": "^10.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.0",
+    "phpunit/phpunit": "^10.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "WellnessLiving\\MessengerSdk\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WellnessLiving\\MessengerSdk\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "WellnessLiving\\MessengerSdk\\MessengerSdkServiceProvider"
+      ],
+      "aliases": {
+        "MessengerSdk": "WellnessLiving\\MessengerSdk\\MessengerSdkFacade"
+      }
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  },
+  "minimum-stability": "stable"
+}

@@ -1,0 +1,5 @@
+### Laravel template
+/vendor/
+/.idea
+
+.env
