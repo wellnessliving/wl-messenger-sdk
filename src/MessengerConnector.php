@@ -2,7 +2,10 @@
 
 namespace WellnessLiving\MessengerSdk;
 
+use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
+use Saloon\Http\OAuth2\GetAccessTokenRequest;
+use Saloon\Http\PendingRequest;
 
 class MessengerConnector extends Connector
 {
@@ -19,6 +22,30 @@ class MessengerConnector extends Connector
         $this->businessId = $businessId;
         $this->userId = $userId;
     }
+
+
+    public function boot(PendingRequest $pendingRequest): void
+    {
+        // Let's start by returning early if the request being sent is the
+        // GetAccessTokenRequest. We don't want to create an infinite loop
+
+        if ($pendingRequest->getRequest() instanceof GetAccessTokenRequest) {
+            return;
+        }
+
+
+        // Now let's make our authentication request. Since we are in the
+        // context of the connector, we can just simply call $this and
+        // make another request!
+
+        $authResponse = $this->send(new GetTokenRequest($this->internalAccessKey, $this->businessId, $this->userId));
+
+        // Now we'll take the token from the auth response and then pass it
+        // into the $pendingRequest which is the original GetSongsByArtistRequest.
+
+        $pendingRequest->authenticate(new TokenAuthenticator($authResponse->json()['data']['access_token']));
+    }
+
     /**
      * @inheritDoc
      */
