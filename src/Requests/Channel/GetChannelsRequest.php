@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WellnessLiving\MessengerSdk\Requests\Channel;
 
 use Saloon\Enums\Method;
@@ -10,7 +12,7 @@ class GetChannelsRequest extends Request
     protected Method $method = Method::GET;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function resolveEndpoint(): string
     {

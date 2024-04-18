@@ -1,14 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WellnessLiving\MessengerSdk\Requests\Authentication;
 
-use Illuminate\Support\Facades\Cache;
-use Saloon\CachePlugin\Contracts\Cacheable;
-use Saloon\CachePlugin\Contracts\Driver;
-use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
-use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
-use Saloon\Http\PendingRequest;
 use Saloon\Http\Request;
 
 class GetTokenRequest extends Request
@@ -28,9 +24,8 @@ class GetTokenRequest extends Request
         $this->userId = $userId;
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function resolveEndpoint(): string
     {
@@ -40,7 +35,7 @@ class GetTokenRequest extends Request
     public function defaultHeaders(): array
     {
         return [
-            'X-ACCESS-KEY' => $this->accessKey
+            'X-ACCESS-KEY' => $this->accessKey,
         ];
     }
 
@@ -51,5 +46,4 @@ class GetTokenRequest extends Request
             'user_id' => $this->userId,
         ];
     }
-
 }

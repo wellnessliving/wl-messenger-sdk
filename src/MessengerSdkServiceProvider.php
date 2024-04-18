@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WellnessLiving\MessengerSdk;
 
 use Illuminate\Foundation\Application;
@@ -12,11 +14,10 @@ class MessengerSdkServiceProvider extends ServiceProvider
     {
         AboutCommand::add('WellnessLiving Messenger SDK', fn() => ['Version' => '0.0.1']);
 
-
         $this->registerConfig();
         /*
-        * Optional methods to load your package assets
-        */
+         * Optional methods to load your package assets
+         */
 
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'wl-messenger-api-sdk');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'wl-messenger-api-sdk');
@@ -24,7 +25,6 @@ class MessengerSdkServiceProvider extends ServiceProvider
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         if ($this->app->runningInConsole()) {
-
 
             // Publishing the views.
             /*$this->publishes([
@@ -58,7 +58,6 @@ class MessengerSdkServiceProvider extends ServiceProvider
         });
     }
 
-
     private function registerConfig()
     {
         $this->publishes([
@@ -68,6 +67,4 @@ class MessengerSdkServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/wl-messenger.php', 'wl-messenger');
     }
-
-
 }
