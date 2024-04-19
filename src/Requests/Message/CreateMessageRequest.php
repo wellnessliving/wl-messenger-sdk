@@ -19,7 +19,7 @@ class CreateMessageRequest extends Request implements HasBody
 
     protected string $channelId;
 
-    public function __construct(string $message, string $channelId)
+    public function __construct(string $channelId, string $message)
     {
         $this->message = $message;
         $this->channelId = $channelId;

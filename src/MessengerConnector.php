@@ -8,13 +8,9 @@ use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Http\PendingRequest;
 use WellnessLiving\MessengerSdk\Requests\Authentication\GetTokenRequest;
-use WellnessLiving\MessengerSdk\Requests\Channel\CreateChannelRequest;
-use WellnessLiving\MessengerSdk\Requests\Channel\GetChannelRequest;
-use WellnessLiving\MessengerSdk\Requests\Channel\GetChannelsRequest;
-use WellnessLiving\MessengerSdk\Requests\Message\CreateMessageRequest;
-use WellnessLiving\MessengerSdk\Requests\Message\DeleteMessageRequest;
-use WellnessLiving\MessengerSdk\Requests\Message\GetMessagesRequest;
-use WellnessLiving\MessengerSdk\Requests\Message\UpdateMessageRequest;
+use WellnessLiving\MessengerSdk\Requests\Channel\ChannelResource;
+use WellnessLiving\MessengerSdk\Requests\ChannelUser\ChannelUserResource;
+use WellnessLiving\MessengerSdk\Requests\Message\MessageResource;
 
 class MessengerConnector extends Connector
 {
@@ -28,13 +24,22 @@ class MessengerConnector extends Connector
 
     public string $apiVersion;
 
-    public function __construct($baseUrl, $internalAccessKey, string|int|null $businessId = null, string|int|null $userId = null, string $apiVersion = 'v1')
-    {
+    public ?string $accessToken = null;
+
+    public function __construct(
+        $baseUrl,
+        $internalAccessKey,
+        string|int|null $businessId = null,
+        string|int|null $userId = null,
+        ?string $accessToken = null,
+        string $apiVersion = 'v1'
+    ) {
         $this->baseUrl = $baseUrl;
         $this->internalAccessKey = $internalAccessKey;
         $this->businessId = $businessId;
         $this->userId = $userId;
         $this->apiVersion = $apiVersion;
+        $this->accessToken = $accessToken;
     }
 
     public function boot(PendingRequest $pendingRequest): void
@@ -49,7 +54,6 @@ class MessengerConnector extends Connector
         // Now let's make our authentication request. Since we are in the
         // context of the connector, we can just simply call $this and
         // make another request!
-
         $authResponse = $this->send(new GetTokenRequest($this->internalAccessKey, $this->businessId, $this->userId));
 
         // Now we'll take the token from the auth response and then pass it
@@ -90,44 +94,19 @@ class MessengerConnector extends Connector
         return $this->userId;
     }
 
-    public function allChannel()
+    public function channel(): ChannelResource
     {
-        return $this->send(new GetChannelsRequest());
+        return new ChannelResource($this);
     }
 
-    public function getChannel(string $channelId)
+    public function message(): MessageResource
     {
-        return $this->send(new GetChannelRequest($channelId));
+        return new MessageResource($this);
     }
 
-    public function createChannel(
-        string $topicId,
-        string $topic,
-        ?string $description = null,
-        bool $isPrivate = false,
-        array $metaData = []
-    ) {
-        return $this->send(new CreateChannelRequest($topicId, $topic, $description, $isPrivate, $metaData));
-    }
-
-    public function getMessages(string $channelId)
+    public function channelUser(): ChannelUserResource
     {
-        return $this->send(new GetMessagesRequest($channelId));
-    }
-
-    public function createMessage(string $message, string $channelId)
-    {
-        return $this->send(new CreateMessageRequest($message, $channelId));
-    }
-
-    public function updateMessage(string $message, string $channelId)
-    {
-        return $this->send(new UpdateMessageRequest($message, $channelId));
-    }
-
-    public function deleteMessage(string $messageId)
-    {
-        return $this->send(new DeleteMessageRequest($messageId));
+        return new ChannelUserResource($this);
     }
 
     protected function defaultHeaders(): array

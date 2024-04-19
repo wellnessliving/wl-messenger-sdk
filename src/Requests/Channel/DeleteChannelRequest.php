@@ -7,15 +7,15 @@ namespace WellnessLiving\MessengerSdk\Requests\Channel;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetChannelRequest extends Request
+class DeleteChannelRequest extends Request
 {
-    protected Method $method = Method::GET;
+    protected Method $method = Method::DELETE;
 
-    protected string|int $id;
+    protected string|int $channelId;
 
     public function __construct(string|int $channelId)
     {
-        $this->id = $channelId;
+        $this->channelId = $channelId;
     }
 
     /**
@@ -23,6 +23,6 @@ class GetChannelRequest extends Request
      */
     public function resolveEndpoint(): string
     {
-        return '/channels/' . $this->id;
+        return '/channels/' . $this->channelId;
     }
 }

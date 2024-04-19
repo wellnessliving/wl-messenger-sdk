@@ -7,11 +7,11 @@ namespace WellnessLiving\MessengerSdk\Requests\Channel;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Traits\Body\HasFormBody;
+use Saloon\Traits\Body\HasJsonBody;
 
 class CreateChannelRequest extends Request implements HasBody
 {
-    use HasFormBody;
+    use HasJsonBody;
 
     protected Method $method = Method::POST;
 
@@ -21,22 +21,14 @@ class CreateChannelRequest extends Request implements HasBody
 
     protected ?string $description;
 
-    protected bool $isPrivate;
+    protected bool $isPrivate = false;
 
-    protected array $metaData;
+    protected array $metaData = [];
 
-    public function __construct(
-        string $topicId,
-        string $topic,
-        ?string $description = null,
-        bool $isPrivate = false,
-        array $metaData = []
-    ) {
-        $this->topicId = $topicId;
-        $this->topic = $topic;
-        $this->description = $description;
-        $this->isPrivate = $isPrivate;
-        $this->metaData = $metaData;
+    public function __construct(array $attributes)
+    {
+        $this->topicId = $attributes['topic_id'];
+        $this->topic = $attributes['topic'];
     }
 
     /**
@@ -44,7 +36,7 @@ class CreateChannelRequest extends Request implements HasBody
      */
     public function resolveEndpoint(): string
     {
-        // TODO: Implement resolveEndpoint() method.
+        return '/channels';
     }
 
     protected function defaultBody(): array
@@ -52,7 +44,6 @@ class CreateChannelRequest extends Request implements HasBody
         return [
             'topic_id' => $this->topicId,
             'topic' => $this->topic,
-            'description' => $this->description,
             'is_private' => $this->isPrivate,
             'meta_data' => $this->metaData,
         ];
