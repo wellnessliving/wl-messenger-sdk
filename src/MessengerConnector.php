@@ -12,6 +12,7 @@ use WellnessLiving\MessengerSdk\Requests\Channel\CreateChannelRequest;
 use WellnessLiving\MessengerSdk\Requests\Channel\GetChannelRequest;
 use WellnessLiving\MessengerSdk\Requests\Channel\GetChannelsRequest;
 use WellnessLiving\MessengerSdk\Requests\Message\CreateMessageRequest;
+use WellnessLiving\MessengerSdk\Requests\Message\DeleteMessageRequest;
 use WellnessLiving\MessengerSdk\Requests\Message\GetMessagesRequest;
 use WellnessLiving\MessengerSdk\Requests\Message\UpdateMessageRequest;
 
@@ -122,6 +123,11 @@ class MessengerConnector extends Connector
     public function updateMessage(string $message, string $channelId)
     {
         return $this->send(new UpdateMessageRequest($message, $channelId));
+    }
+
+    public function deleteMessage(string $messageId)
+    {
+        return $this->send(new DeleteMessageRequest($messageId));
     }
 
     protected function defaultHeaders(): array
