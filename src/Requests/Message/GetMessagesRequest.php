@@ -13,7 +13,7 @@ class GetMessagesRequest extends Request
 
     protected Method $method = Method::GET;
 
-    public function __construct(?string $channelId = null)
+    public function __construct(string $channelId)
     {
         $this->channelId = $channelId;
     }
@@ -24,14 +24,6 @@ class GetMessagesRequest extends Request
     public function resolveEndpoint(): string
     {
         return '/messages';
-    }
-
-    protected function defaultHeaders(): array
-    {
-        return [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ];
     }
 
     protected function defaultQuery(): array

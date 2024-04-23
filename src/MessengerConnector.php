@@ -16,37 +16,43 @@ class MessengerConnector extends Connector
 {
     public string $baseUrl;
 
-    public string $internalAccessKey;
+    public string $signatureKey;
 
-    public string|int|null $businessId;
+    /** @var string|int|null */
+    public $businessId;
 
-    public string|int|null $userId;
+    /** @var string|int|null */
+    public $userId;
 
     public string $apiVersion;
 
-    public ?string $accessToken = null;
-
     public function __construct(
         $baseUrl,
-        $internalAccessKey,
-        string|int|null $businessId = null,
-        string|int|null $userId = null,
-        ?string $accessToken = null,
-        string $apiVersion = 'v1'
-    ) {
+        $signatureKey,
+        string $apiVersion,
+        string $businessId = null,
+        string $userId = null,
+    )
+    {
         $this->baseUrl = $baseUrl;
-        $this->internalAccessKey = $internalAccessKey;
+        $this->signatureKey = $signatureKey;
+        $this->apiVersion = $apiVersion;
         $this->businessId = $businessId;
         $this->userId = $userId;
-        $this->apiVersion = $apiVersion;
-        $this->accessToken = $accessToken;
     }
 
     public function boot(PendingRequest $pendingRequest): void
     {
+        if (!$this->businessId) {
+            throw new \Exception('Missing Business Id');
+        }
+
+        if (!$this->userId) {
+            throw new \Exception('Missing User ID');
+        }
+
         // Let's start by returning early if the request being sent is the
         // GetAccessTokenRequest. We don't want to create an infinite loop
-
         if ($pendingRequest->getRequest() instanceof GetTokenRequest) {
             return;
         }
@@ -61,15 +67,14 @@ class MessengerConnector extends Connector
             implode(':', [
                 'business_id' => $this->businessId,
                 'user_id' => $this->userId,
-                'signature' => config('wl-messenger.messenger_access_key'),
+                'signature' => $this->signatureKey,
             ])
         );
 
-        $authResponse = $this->send(new GetTokenRequest($this->internalAccessKey, $this->businessId, $this->userId));
+        $authResponse = $this->send(new GetTokenRequest($token, $this->businessId, $this->userId));
 
         // Now we'll take the token from the auth response and then pass it
         // into the $pendingRequest which is the original GetSongsByArtistRequest.
-
         $pendingRequest->authenticate(new TokenAuthenticator($authResponse->json()['data']['access_token']));
     }
 
@@ -81,29 +86,6 @@ class MessengerConnector extends Connector
         return $this->baseUrl . "/api/{$this->apiVersion}";
     }
 
-    public function setBusinessId(int|string|null $businessId): MessengerConnector
-    {
-        $this->businessId = $businessId;
-
-        return $this;
-    }
-
-    public function setUserId(int|string|null $userId): MessengerConnector
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    public function getBusinessId(): int|string|null
-    {
-        return $this->businessId;
-    }
-
-    public function getUserId(): int|string|null
-    {
-        return $this->userId;
-    }
 
     public function channel(): ChannelResource
     {
@@ -118,6 +100,18 @@ class MessengerConnector extends Connector
     public function channelUser(): ChannelUserResource
     {
         return new ChannelUserResource($this);
+    }
+
+    public function setBusinessId(int|string $businessId): MessengerConnector
+    {
+        $this->businessId = $businessId;
+        return $this;
+    }
+
+    public function setUserId(int|string $userId): MessengerConnector
+    {
+        $this->userId = $userId;
+        return $this;
     }
 
     protected function defaultHeaders(): array

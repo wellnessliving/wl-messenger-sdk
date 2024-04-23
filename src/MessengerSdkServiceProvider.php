@@ -15,35 +15,7 @@ class MessengerSdkServiceProvider extends ServiceProvider
         AboutCommand::add('WellnessLiving Messenger SDK', fn() => ['Version' => '0.0.1']);
 
         $this->registerConfig();
-        /*
-         * Optional methods to load your package assets
-         */
 
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'wl-messenger-api-sdk');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'wl-messenger-api-sdk');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
-        if ($this->app->runningInConsole()) {
-
-            // Publishing the views.
-            /*$this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/wl-messenger-api-sdk'),
-            ], 'views');*/
-
-            // Publishing assets.
-            /*$this->publishes([
-                __DIR__.'/../resources/assets' => public_path('vendor/wl-messenger-api-sdk'),
-            ], 'assets');*/
-
-            // Publishing the translation files.
-            /*$this->publishes([
-                __DIR__.'/../resources/lang' => resource_path('lang/vendor/wl-messenger-api-sdk'),
-            ], 'lang');*/
-
-            // Registering package commands.
-            // $this->commands([]);
-        }
     }
 
     public function register()
@@ -52,8 +24,9 @@ class MessengerSdkServiceProvider extends ServiceProvider
         $this->app->singleton('messengerSdk', function (Application $application) {
 
             return new MessengerConnector(
-                config('wl-messenger.messenger_api_url'),
-                config('wl-messenger.messenger_access_key'),
+                config('wl-messenger.api_url'),
+                config('wl-messenger.signature_key'),
+                config('wl-messenger.api_version'),
             );
         });
     }

@@ -15,11 +15,11 @@ class GetTokenRequest extends Request
 
     protected string|int $userId;
 
-    protected string $accessKey;
+    protected string $signatureKey;
 
-    public function __construct($accessKey, $businessId, $userId)
+    public function __construct($signatureKey, $businessId, $userId)
     {
-        $this->accessKey = $accessKey;
+        $this->signatureKey = $signatureKey;
         $this->businessId = $businessId;
         $this->userId = $userId;
     }
@@ -35,7 +35,7 @@ class GetTokenRequest extends Request
     public function defaultHeaders(): array
     {
         return [
-            'X-ACCESS-KEY' => $this->accessKey,
+            'X-Signature' => $this->signatureKey,
         ];
     }
 

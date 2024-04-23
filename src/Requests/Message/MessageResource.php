@@ -9,9 +9,9 @@ use Saloon\Http\Response;
 
 class MessageResource extends BaseResource
 {
-    public function all(): Response
+    public function all(string $channelId): Response
     {
-        return $this->connector->send(new GetMessagesRequest());
+        return $this->connector->send(new GetMessagesRequest($channelId));
     }
 
     public function create(
