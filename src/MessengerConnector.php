@@ -54,6 +54,17 @@ class MessengerConnector extends Connector
         // Now let's make our authentication request. Since we are in the
         // context of the connector, we can just simply call $this and
         // make another request!
+
+        // Lets generate a token
+        $token = hash(
+            'sha256',
+            implode(':', [
+                'business_id' => $this->businessId,
+                'user_id' => $this->userId,
+                'signature' => config('wl-messenger.messenger_access_key'),
+            ])
+        );
+
         $authResponse = $this->send(new GetTokenRequest($this->internalAccessKey, $this->businessId, $this->userId));
 
         // Now we'll take the token from the auth response and then pass it
