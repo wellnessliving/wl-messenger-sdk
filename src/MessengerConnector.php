@@ -11,6 +11,7 @@ use WellnessLiving\MessengerSdk\Requests\Authentication\GetTokenRequest;
 use WellnessLiving\MessengerSdk\Requests\Channel\ChannelResource;
 use WellnessLiving\MessengerSdk\Requests\ChannelUser\ChannelUserResource;
 use WellnessLiving\MessengerSdk\Requests\Message\MessageResource;
+use WellnessLiving\MessengerSdk\Requests\Reaction\ReactionResource;
 
 class MessengerConnector extends Connector
 {
@@ -95,6 +96,11 @@ class MessengerConnector extends Connector
     public function message(): MessageResource
     {
         return new MessageResource($this);
+    }
+
+    public function reaction(): ReactionResource
+    {
+        return new ReactionResource($this);
     }
 
     public function channelUser(): ChannelUserResource
