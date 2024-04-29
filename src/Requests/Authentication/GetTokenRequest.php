@@ -29,7 +29,7 @@ class GetTokenRequest extends Request
      */
     public function resolveEndpoint(): string
     {
-        return 'api/v1/authentication/token';
+        return '/authentication/token';
     }
 
     public function defaultHeaders(): array
