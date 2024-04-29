@@ -5,5 +5,5 @@ return [
 
     'signature_key' => env('WL_MESSENGER_SIGNATURE_KEY', ''),
 
-    'api_version' => env('WL_MESSENGER_API_VERSION', 'V1'),
+    'api_version' => env('WL_MESSENGER_API_VERSION', 'v1'),
 ];
