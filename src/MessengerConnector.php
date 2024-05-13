@@ -84,7 +84,7 @@ class MessengerConnector extends Connector
      */
     public function resolveBaseUrl(): string
     {
-        return $this->baseUrl . "/api/{$this->apiVersion}";
+        return "{$this->baseUrl}/api/{$this->apiVersion}";
     }
 
 
