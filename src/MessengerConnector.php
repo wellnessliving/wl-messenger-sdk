@@ -44,6 +44,17 @@ class MessengerConnector extends Connector
 
     public function boot(PendingRequest $pendingRequest): void
     {
+
+        /**
+         * If we are passing a X-Secret-Key in the request
+         * lets assume that we are making a backend call
+         * and we dont want to use any tokens
+         */
+        if ($pendingRequest->headers()->get('X-Secret-Key')) {
+            return;
+
+        }
+
         if (!$this->businessId) {
             throw new \Exception('Missing Business Id');
         }
